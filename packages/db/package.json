@@ -1,0 +1,28 @@
+{
+  "name": "@repo/db",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "migrate:up": "node-pg-migrate up -d $DATABASE_URL",
+    "migrate:down": "node-pg-migrate down -d $DATABASE_URL"
+  },
+  "exports": {
+    "./client": "./index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "dotenv-cli": "^10.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.15.0",
+    "@repo/types": "*",
+    "@types/pg": "^8.15.5",
+    "dotenv": "^17.2.1",
+    "node-pg-migrate": "^8.0.3",
+    "pg": "^8.16.3",
+    "prisma": "^6.15.0"
+  }
+}

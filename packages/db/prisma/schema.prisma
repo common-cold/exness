@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table has subclasses and requires additional setup for migrations. Visit https://pris.ly/d/table-inheritance for more info.
+model kline_1m {
+  ts     DateTime @id @db.Timestamptz(6)
+  open   Float
+  high   Float
+  low    Float
+  close  Float
+  volume Float
+}
+
+model kline_15m {
+  bucket     DateTime @id @db.Timestamptz(6)
+  open   Float
+  high   Float
+  low    Float
+  close  Float
+  volume Float
+
+  @@map("kline_15m")
+}
+
+model kline_30m {
+  bucket     DateTime @id @db.Timestamptz(6)
+  open   Float
+  high   Float
+  low    Float
+  close  Float
+  volume Float
+
+  @@map("kline_30m")
+}
+
+model pgmigrations {
+  id     Int      @id @default(autoincrement())
+  name   String   @db.VarChar(255)
+  run_on DateTime @db.Timestamp(6)
+}

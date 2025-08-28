@@ -1,0 +1,14 @@
+{
+  "name": "price-relayer",
+  "module": "index.ts",
+  "type": "module",
+  "dependencies": {
+    "@repo/types": "*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
