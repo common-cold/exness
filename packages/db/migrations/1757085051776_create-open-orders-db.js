@@ -10,18 +10,18 @@ export const shorthands = undefined;
  */
 export const up = (pgm) => {
     pgm.sql(`
-        CREATE TABLE kline_1m (
-            ts TIMESTAMPTZ PRIMARY KEY,
-            open BIGINT NOT NULL,
-            high BIGINT NOT NULL,
-            low BIGINT NOT NULL,
-            close BIGINT NOT NULL,
-            volume BIGINT NOT NULL
-        ); 
-    `);
 
-    pgm.sql(`
-        SELECT create_hypertable('kline_1m', 'ts', if_not_exists => TRUE);
+        CREATE TYPE order_type AS ENUM ('Long', 'Short');
+
+        CREATE TABLE open_orders (
+            id SERIAL PRIMARY KEY,
+            type order_type NOT NULL,
+            asset TEXT NOT NULL,
+            entry_price BIGINT NOT NULL,
+            margin BIGINT NOT NULL,
+            qty BIGINT NOT NULL,
+            user_id UUID REFERENCES users(id)
+        );    
     `);
 };
 
@@ -32,6 +32,7 @@ export const up = (pgm) => {
  */
 export const down = (pgm) => {
     pgm.sql(`
-        DROP TABLE IF EXISTS kline_1m    
+        DROP TABLE IF EXISTS open_orders;
+        DROP TYPE IF EXISTS order_type;
     `);
 };

@@ -11,31 +11,31 @@ datasource db {
 /// This table has subclasses and requires additional setup for migrations. Visit https://pris.ly/d/table-inheritance for more info.
 model kline_1m {
   ts     DateTime @id @db.Timestamptz(6)
-  open   Float
-  high   Float
-  low    Float
-  close  Float
-  volume Float
+  open   BigInt
+  high   BigInt
+  low    BigInt
+  close  BigInt
+  volume BigInt
 }
 
 model kline_15m {
   bucket     DateTime @id @db.Timestamptz(6)
-  open   Float
-  high   Float
-  low    Float
-  close  Float
-  volume Float
+  open   BigInt
+  high   BigInt
+  low    BigInt
+  close  BigInt
+  volume BigInt
 
   @@map("kline_15m")
 }
 
 model kline_30m {
   bucket     DateTime @id @db.Timestamptz(6)
-  open   Float
-  high   Float
-  low    Float
-  close  Float
-  volume Float
+  open   BigInt
+  high   BigInt
+  low    BigInt
+  close  BigInt
+  volume BigInt
 
   @@map("kline_30m")
 }
@@ -44,4 +44,29 @@ model pgmigrations {
   id     Int      @id @default(autoincrement())
   name   String   @db.VarChar(255)
   run_on DateTime @db.Timestamp(6)
+}
+
+model open_orders {
+  id          Int        @id @default(autoincrement())
+  type        order_type
+  asset       String
+  entry_price BigInt
+  margin      BigInt
+  qty         BigInt
+  user_id     String?    @db.Uuid
+  users       users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id             String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  username       String        @unique
+  password       String
+  free_balance   BigInt        @default(0)
+  locked_balance BigInt        @default(0)
+  open_orders    open_orders[]
+}
+
+enum order_type {
+  Long
+  Short
 }

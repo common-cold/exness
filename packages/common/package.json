@@ -1,12 +1,12 @@
 {
-  "name": "@repo/types",
+  "name": "@repo/common",
   "module": "index.ts",
   "type": "module",
   "exports": {
-    "./client": "./index.ts"
+    ".": "./index.ts"
   },
   "dependencies": {
-    "@repo/db": "*"
+    "@repo/types": "*"
   },
   "devDependencies": {
     "@types/bun": "latest"

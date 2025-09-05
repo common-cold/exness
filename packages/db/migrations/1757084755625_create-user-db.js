@@ -10,18 +10,16 @@ export const shorthands = undefined;
  */
 export const up = (pgm) => {
     pgm.sql(`
-        CREATE TABLE kline_1m (
-            ts TIMESTAMPTZ PRIMARY KEY,
-            open BIGINT NOT NULL,
-            high BIGINT NOT NULL,
-            low BIGINT NOT NULL,
-            close BIGINT NOT NULL,
-            volume BIGINT NOT NULL
-        ); 
-    `);
 
-    pgm.sql(`
-        SELECT create_hypertable('kline_1m', 'ts', if_not_exists => TRUE);
+        CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+        CREATE TABLE users (
+            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            free_balance BIGINT NOT NULL DEFAULT 0,
+            locked_balance BIGINT NOT NULL DEFAULT 0
+        );    
     `);
 };
 
@@ -32,6 +30,7 @@ export const up = (pgm) => {
  */
 export const down = (pgm) => {
     pgm.sql(`
-        DROP TABLE IF EXISTS kline_1m    
+        DROP TABLE IF EXISTS users ;
+        DROP EXTENSION IF EXISTS "uuid-ossp";   
     `);
 };

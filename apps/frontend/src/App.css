@@ -1,0 +1,21 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.iconStyle {
+  width: 20px;
+  height: 20px;
+}
+
+.greyBorder {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #3f474b;
+}
+
+.gridContent {
+  min-width: 0px;
+  min-height: 0px;
+}
