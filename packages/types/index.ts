@@ -1,29 +1,65 @@
 import type { order_type } from "../db/generated/prisma"
 
+
+export type Asset = "btc";
+
 export type Kline = {
     ts: bigint | string,
-    open: bigint,
-    high: bigint,
-    low: bigint,
-    close: bigint,
-    volume: bigint,
+    open: number,
+    high: number,
+    low: number,
+    close: number,
+    volume: number,
 }
 
-//used only for transporting
+
 export type PriceUpdate = {
-    btc: string
+    btc: {
+        buyPrice: number,
+        sellPrice: number,
+    },
 }
 
-//this is actually used
-export type PriceUpdateBigInt = {
-    btc: bigint
-}
 
 export type CreateOrderBody = {
     userId: string,
-    asset: string,
+    asset: Asset,
     type: order_type,
-    margin: bigint,
-    qty: bigint
+    margin: number,
+    qty: number
 }
 
+
+export type GetOrderBody = {
+    userId: string
+}
+
+export type ClosedOrders = {
+    id: string,    
+    type: order_type,
+    asset: string,
+    margin: number,
+    qty: number,
+    entry_price: number,
+    exit_price: number,
+    entry_time: number,
+    exit_time: number,
+    p_l: number,
+    userId: string
+}
+
+export type OpenOrders = {  
+    id: string,
+    type: order_type,
+    asset: string,
+    margin: number,
+    qty: number,
+    entry_price: number,
+    entry_time: number,
+    userId: string
+}
+
+export type CloseOrderBody = {
+    userId: string,
+    orderId: string
+}

@@ -29,20 +29,18 @@ wss.onmessage = async (event: MessageEvent) => {
         "eventTime": data.E,
         "startTime": data.k.t,
         "event": data.e,
-        "open": BigInt(Math.round(Number(parseFloat(data.k.o).toFixed(2)) * PRICE_DECIMAL)),
-        "high": BigInt(Math.round(Number(parseFloat(data.k.h).toFixed(2)) * PRICE_DECIMAL)),
-        "low": BigInt(Math.round(Number(parseFloat(data.k.l).toFixed(2)) * PRICE_DECIMAL)),
-        "close": BigInt(Math.round(Number(parseFloat(data.k.c).toFixed(2)) * PRICE_DECIMAL)),
-        "volume": BigInt(Math.round(Number(parseFloat(data.k.v).toFixed(5)) * VOLUME_DECIMAL)),
+        "open": Math.round(Number(parseFloat(data.k.o).toFixed(2)) * PRICE_DECIMAL),
+        "high": Math.round(Number(parseFloat(data.k.h).toFixed(2)) * PRICE_DECIMAL),
+        "low": Math.round(Number(parseFloat(data.k.l).toFixed(2)) * PRICE_DECIMAL),
+        "close": Math.round(Number(parseFloat(data.k.c).toFixed(2)) * PRICE_DECIMAL),
+        "volume": Math.round(Number(parseFloat(data.k.v).toFixed(5)) * VOLUME_DECIMAL),
         "isClosed": data.k.x
     };
     console.log(klineObject);
     let priceUpdate: PriceUpdate = {
-        btc: klineObject.close.toString()
+        btc: calculatePrice(klineObject.close, 0.01)
     } 
-    // clients.forEach(async (client) => {
-    //     client.send(JSON.stringify(priceUpdate));
-    // })
+
     await publish(priceUpdate);
 
     if (klineObject.isClosed) {
@@ -63,25 +61,15 @@ wss.onopen = async () => {
 }
 
 
-// Bun.serve({
-//     port: 8082,
-//     fetch(req, server) {
-//         if (server.upgrade(req)) {
-//             return;
-//         } else {
-//             return new Response("Not a websocket");
-//         }
-//     },
-//     websocket: {
-//         open(ws) {
-//             clients.add(ws);   
-//         },
-//         message(ws, message) {
-
-//         }
-//     }
-// });
-
 async function publish(priceUpdate: PriceUpdate) {
     await publishClient.publish(CHANNEL_NAME, JSON.stringify(priceUpdate));
+}
+
+
+function calculatePrice(price: number, percentage: number) {
+    let difference = price * percentage / 100;
+    return {
+        buyPrice: Math.round(price + difference)/PRICE_DECIMAL,
+        sellPrice: Math.round(price - difference)/PRICE_DECIMAL
+    }
 }

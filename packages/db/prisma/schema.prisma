@@ -11,31 +11,31 @@ datasource db {
 /// This table has subclasses and requires additional setup for migrations. Visit https://pris.ly/d/table-inheritance for more info.
 model kline_1m {
   ts     DateTime @id @db.Timestamptz(6)
-  open   BigInt
-  high   BigInt
-  low    BigInt
-  close  BigInt
-  volume BigInt
+  open   Int
+  high   Int
+  low    Int
+  close  Int
+  volume Int
 }
 
 model kline_15m {
   bucket     DateTime @id @db.Timestamptz(6)
-  open   BigInt
-  high   BigInt
-  low    BigInt
-  close  BigInt
-  volume BigInt
+  open   Int
+  high   Int
+  low    Int
+  close  Int
+  volume Int
 
   @@map("kline_15m")
 }
 
 model kline_30m {
   bucket     DateTime @id @db.Timestamptz(6)
-  open   BigInt
-  high   BigInt
-  low    BigInt
-  close  BigInt
-  volume BigInt
+  open   Int
+  high   Int
+  low    Int
+  close  Int
+  volume Int
 
   @@map("kline_30m")
 }
@@ -47,23 +47,40 @@ model pgmigrations {
 }
 
 model open_orders {
-  id          Int        @id @default(autoincrement())
+  id          String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   type        order_type
   asset       String
-  entry_price BigInt
   margin      BigInt
   qty         BigInt
+  entry_price BigInt
+  entry_time  BigInt
   user_id     String?    @db.Uuid
   users       users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model users {
-  id             String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  username       String        @unique
+  id             String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  username       String          @unique
   password       String
-  free_balance   BigInt        @default(0)
-  locked_balance BigInt        @default(0)
+  free_balance   BigInt          @default(0)
+  locked_balance BigInt          @default(0)
+  closed_orders  closed_orders[]
   open_orders    open_orders[]
+}
+
+model closed_orders {
+  id          String     @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  type        order_type
+  asset       String
+  margin      BigInt
+  qty         BigInt
+  entry_price BigInt
+  exit_price  BigInt
+  entry_time  BigInt
+  exit_time   BigInt
+  p_l         BigInt
+  user_id     String?    @db.Uuid
+  users       users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum order_type {

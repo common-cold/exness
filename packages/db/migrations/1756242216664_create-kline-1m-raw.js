@@ -12,11 +12,11 @@ export const up = (pgm) => {
     pgm.sql(`
         CREATE TABLE kline_1m (
             ts TIMESTAMPTZ PRIMARY KEY,
-            open BIGINT NOT NULL,
-            high BIGINT NOT NULL,
-            low BIGINT NOT NULL,
-            close BIGINT NOT NULL,
-            volume BIGINT NOT NULL
+            open INTEGER NOT NULL,
+            high INTEGER NOT NULL,
+            low INTEGER NOT NULL,
+            close INTEGER NOT NULL,
+            volume INTEGER NOT NULL
         ); 
     `);
 

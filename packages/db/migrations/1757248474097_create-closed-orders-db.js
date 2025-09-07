@@ -10,19 +10,19 @@ export const shorthands = undefined;
  */
 export const up = (pgm) => {
     pgm.sql(`
-
-        CREATE TYPE order_type AS ENUM ('Long', 'Short');
-
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-        CREATE TABLE open_orders (
+        CREATE TABLE closed_orders (
             id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
             type order_type NOT NULL,
             asset TEXT NOT NULL,
             margin BIGINT NOT NULL,
             qty BIGINT NOT NULL,
             entry_price BIGINT NOT NULL,
+            exit_price BIGINT NOT NULL,
             entry_time BIGINT NOT NULL,
+            exit_time BIGINT NOT NULL,
+            p_l BIGINT NOT NULL,
             user_id UUID REFERENCES users(id)
         );    
     `);
@@ -35,7 +35,6 @@ export const up = (pgm) => {
  */
 export const down = (pgm) => {
     pgm.sql(`
-        DROP TABLE IF EXISTS open_orders;
-        DROP TYPE IF EXISTS order_type;
+        DROP TABLE IF EXISTS closed_orders;
     `);
 };

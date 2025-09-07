@@ -2,6 +2,7 @@ import type { Kline } from '@repo/types/client';
 import { CandlestickSeries, ColorType, createChart, type IChartApi, type UTCTimestamp } from 'lightweight-charts';
 import { useEffect, useRef } from 'react';
 import { getCandlesInTimeRange } from '../utils/util';
+import { PRICE_DECIMAL } from '@repo/common';
 
 export function TradingChart({time} : {time: string}) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -17,13 +18,13 @@ export function TradingChart({time} : {time: string}) {
         const candleSticks = response.map((kline: Kline)=> {
             return {  
                 time: Math.floor(new Date(kline.ts.toString()).getTime()/1000), 
-                open: kline.open, 
-                high: kline.high, 
-                low: kline.low, 
-                close: kline.close 
+                open: kline.open/PRICE_DECIMAL, 
+                high: kline.high/PRICE_DECIMAL, 
+                low: kline.low/PRICE_DECIMAL, 
+                close: kline.close/PRICE_DECIMAL 
             }
         });
-        candlestickSeries.setData(candleSticks);;
+        candlestickSeries.setData(candleSticks);
         earliestCandle.current = candleSticks[0].time;
     }
 
@@ -64,10 +65,6 @@ export function TradingChart({time} : {time: string}) {
                 return;
             } else {
                 const from = newRange.from as UTCTimestamp;
-                // console.log(JSON.stringify({
-                //     from: from,
-                //     earlliest: earliestCandle.current
-                // }));
                 if (from <= earliestCandle.current) {
                     let thirtyMinsBefore = earliestCandle.current - 2 * 24 * 60 * 60;
                     await updateSheetData(time, thirtyMinsBefore, currTime);
