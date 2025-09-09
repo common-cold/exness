@@ -83,6 +83,13 @@ model closed_orders {
   users       users?     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model price_ticker {
+  id     String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  ts     Int
+  price  Int
+  volume Int
+}
+
 enum order_type {
   Long
   Short

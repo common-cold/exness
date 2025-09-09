@@ -63,3 +63,9 @@ export type CloseOrderBody = {
     userId: string,
     orderId: string
 }
+
+export type PriceTick = {
+    time: number,
+    price: string,
+    volume: string
+}
